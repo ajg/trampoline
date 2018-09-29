@@ -1,0 +1,7 @@
+language: c
+
+os:
+  - osx
+
+script:
+  - cc trampoline.c trampoline.s -o trampoline.o

@@ -23,29 +23,14 @@
 #ifndef TRAMPOLINE_H_INCLUDED
 #define TRAMPOLINE_H_INCLUDED
 
-// #pragma once
+#pragma once
 
-#ifndef HAS_TRAMPOLINE_CALL
-#if (defined(__arm__) || defined(__arm64__) || defined(__i386__) || defined(__x86_64__))
-#define HAS_TRAMPOLINE_CALL 1
+#ifndef TRAMPOLINE_AVAILABLE
+#if ((defined(__arm__) || defined(__arm64__) || defined(__i386__) || defined(__x86_64__)) \
+    && (__has_include(<mach/mach.h>)))
+#define TRAMPOLINE_AVAILABLE 1
 #else
-#define HAS_TRAMPOLINE_CALL 0
-#endif
-#endif
-
-#ifndef HAS_TRAMPOLINE_STACK
-#if __has_include(<mach/mach.h>)
-#define HAS_TRAMPOLINE_STACK 1
-#else
-#define HAS_TRAMPOLINE_STACK 0
-#endif
-#endif
-
-#ifndef HAS_TRAMPOLINE
-#if (HAS_TRAMPOLINE_CALL && HAS_TRAMPOLINE_STACK)
-#define HAS_TRAMPOLINE 1
-#else
-#define HAS_TRAMPOLINE 0
+#define TRAMPOLINE_AVAILABLE 0
 #endif
 #endif
 
@@ -55,13 +40,9 @@
 extern "C" {
 #endif
 
-#if HAS_TRAMPOLINE_CALL
 void  trampoline_call(void* arg, void (*fp)(void*), void* stack, size_t size);
-#endif
-#if HAS_TRAMPOLINE_STACK
 void* trampoline_allocate(size_t size);
 void  trampoline_deallocate(void* stack, size_t size);
-#endif
 
 #ifdef __cplusplus
 } // extern "C"

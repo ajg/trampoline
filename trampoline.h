@@ -40,7 +40,7 @@
 extern "C" {
 #endif
 
-void  trampoline_call(void* arg, void (*fp)(void*), void* stack, size_t size);
+void  trampoline_invoke(void* arg, void (*fp)(void*), void* stack, size_t size);
 void* trampoline_allocate(size_t size);
 void  trampoline_deallocate(void* stack, size_t size);
 

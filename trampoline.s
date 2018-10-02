@@ -22,7 +22,7 @@
 
 #if defined(__arm__)
 
-//  void trampoline_call(void *arg, void (*fp)(void *), void *stack, size_t size);
+//  void trampoline_invoke(void *arg, void (*fp)(void *), void *stack, size_t size);
 //
 //  |---------| <- r2 on entry
 //  | prev lr |
@@ -37,8 +37,8 @@
 //  |vvvvvvvvv|
 
 .align 2
-.globl _trampoline_call
-_trampoline_call:
+.globl _trampoline_invoke
+_trampoline_invoke:
   # set up the saved stack frame
   stmfd r2!, { r7, lr }
   mov r7, r2
@@ -59,7 +59,7 @@ _trampoline_call:
 
 #elif defined(__arm64__)
 
-# void trampoline_call(void *arg, void (*fp)(void *), void *stack, size_t size);
+# void trampoline_invoke(void *arg, void (*fp)(void *), void *stack, size_t size);
 #
 # |---------| <- x2 on entry
 # |  size   |
@@ -74,8 +74,8 @@ _trampoline_call:
 # |vvvvvvvvv|
 
 .align 2
-.globl _trampoline_call
-_trampoline_call:
+.globl _trampoline_invoke
+_trampoline_invoke:
   # set up the saved stack frame
   stp fp, lr, [x2, #-32]!
   mov fp, x2
@@ -99,7 +99,7 @@ _trampoline_call:
 
 #elif defined(__i386__)
 
-# void trampoline_call(void *arg, void (*fp)(void *), void *stack, size_t size);
+# void trampoline_invoke(void *arg, void (*fp)(void *), void *stack, size_t size);
 #
 # Here's how we'll set up the stack. Having a stack frame isn't required, but
 # the space needs to be there for alignment and it's much nicer.
@@ -116,8 +116,8 @@ _trampoline_call:
 # |          |
 # |vvvvvvvvvv|
 
-.globl _trampoline_call
-_trampoline_call:
+.globl _trampoline_invoke
+_trampoline_invoke:
   # Grab our new stack pointer and start setting things up...
   movl 12(%esp), %eax
   subl $16, %eax
@@ -149,14 +149,14 @@ _trampoline_call:
 
 #elif defined(__x86_64__)
 
-# void trampoline_call(void *arg, void (*fp)(void *), void *stack, size_t size);
+# void trampoline_invoke(void *arg, void (*fp)(void *), void *stack, size_t size);
 # rdi = fp
 # rsi = arg
 # rdx = stack
 # rcx = size
 #
-.globl _trampoline_call
-_trampoline_call:
+.globl _trampoline_invoke
+_trampoline_invoke:
   # Store the original stack size and our custom stack size
   movq %rdx, -8(%rdx)
   movq %rcx, -16(%rdx)
